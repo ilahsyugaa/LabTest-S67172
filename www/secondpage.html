@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Staff Details</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <link href="css/navbar-fixed-top.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 60px; /* Adjust based on your navbar height */
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">CSM3503</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="index.html">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Profile</a></li>
+                            <li><a href="#">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 70px;">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="staff-details">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th>Employee Number</th>
+                                <td id="employeeNumber"></td>
+                            </tr>
+                            <tr>
+                                <th>First Name</th>
+                                <td id="firstName"></td>
+                            </tr>
+                            <tr>
+                                <th>Last Name</th>
+                                <td id="lastName"></td>
+                            </tr>
+                            <tr>
+                                <th>Office Code</th>
+                                <td id="officeCode"></td>
+                            </tr>
+                            <tr>
+                                <th>Phone Extension</th>
+                                <td id="extension"></td>
+                            </tr>
+                            <tr>
+                                <th>Email Address</th>
+                                <td id="email"></td>
+                            </tr>
+                            <tr>
+                                <th>Job Title</th>
+                                <td id="jobTitle"></td>
+                            </tr>
+                            <tr>
+                                <th>Reports To</th>
+                                <td id="reportsTo"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                  Front End Nur Fadhilah &copy;2024
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var employeeNumber = urlParams.get('id');
+
+            if (employeeNumber) {
+                $.ajax({
+                    url: 'https://kerbau.odaje.biz/getstaffbyid.php',
+                    method: 'GET',
+                    data: { id: employeeNumber },
+                    success: function(response) {
+                        var data = JSON.parse(response);
+                        if (data[0].status === 0) {
+                            $('#staff-details').html('<p>No data found for the given employee number.</p>');
+                        } else {
+                            var employee = JSON.parse(data[1]);
+                            $('#employeeNumber').text(employee.employeeNumber);
+                            $('#firstName').text(employee.firstName);
+                            $('#lastName').text(employee.lastName);
+                            $('#officeCode').text(employee.officeCode);
+                            $('#extension').text(employee.extension);
+                            $('#email').text(employee.email);
+                            $('#jobTitle').text(employee.jobTitle);
+                            $('#reportsTo').text(employee.reportsTo);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching staff details:', error);
+                    }
+                });
+            } else {
+                $('#staff-details').html('<p>Invalid employee number.</p>');
+            }
+        });
+    </script>
+</body>
+</html>
